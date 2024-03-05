@@ -2,15 +2,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const userModel = require("../models/userModel");
-require("dotenv").config();
 
 const createToken = (_id) => {
   const jwtSecretKey = process.env.JWT_SECRET_KEY;
-  if (!jwtSecretKey) {
-    throw new Error(
-      "JWT_SECRET_KEY is not defined. Please set the environment variable."
-    );
-  }
 
   return jwt.sign({ _id }, jwtSecretKey, { expiresIn: "3d" });
 };
@@ -63,6 +57,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({ _id: user._id, name: user.name, email, token });
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };
