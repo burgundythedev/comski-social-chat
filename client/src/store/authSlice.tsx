@@ -20,7 +20,7 @@ const authSlice = createSlice({
     ) {
       const { _id, name, email, token } = action.payload;
 
-      state.user = { _id, email, name, token };
+      state.user = { _id, email, name, token, typeToken: "register"};
     },
 
     loginUser(
@@ -40,7 +40,7 @@ const authSlice = createSlice({
         JSON.stringify({ _id, name, email, token, password })
       );
 
-      state.user = { _id, name, email, token, password };
+      state.user = { _id, name, email, token, password, typeToken: "login"};
     },
 
     logoutUser(state) {

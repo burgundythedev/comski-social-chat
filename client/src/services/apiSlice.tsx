@@ -12,7 +12,16 @@ export const apiSlice = createApi({
         body: userInfo,
       }),
     }),
+
+    loginUser: builder.mutation<User, { email: string; password: string }>({
+      query: (credentials) => ({
+        url: "/users/login",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useRegisterUserMutation } = apiSlice;
+// Export hooks for both mutations
+export const { useRegisterUserMutation, useLoginUserMutation } = apiSlice;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRegisterUserMutation } from "../services/apiSlice";
-import { RegisterInfo } from "../models";
+import { BackendError, RegisterInfo } from "../models";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -11,7 +11,6 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage("");
@@ -22,10 +21,14 @@ const Register = () => {
         name,
         email,
         password,
+        typeToken: "registration",
       };
 
       const result = await registerUser(registerInfo).unwrap();
-      localStorage.setItem("userInfo", JSON.stringify({ ...result }));
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify({ ...result, type: "registration" })
+      );
 
       setMessage("Registration successful! Redirecting to login...");
 
@@ -35,10 +38,15 @@ const Register = () => {
 
       setTimeout(() => {
         navigate("/login");
-      }, 3000);
+      }, 2000);
     } catch (err) {
-      console.error("Registration error:", err);
-      setError("An error occurred during registration. Please try again.");
+      const typedError = err as BackendError;
+
+      const errorMessage =
+        typeof typedError.data === "string"
+          ? typedError.data
+          : "An error occurred during registration. Please try again.";
+      setError(errorMessage);
     }
   };
 
@@ -47,9 +55,9 @@ const Register = () => {
       <div className="px-20 py-20 mt-4 text-left bg-white shadow-lg w-1/2">
         <form onSubmit={handleSubmit}>
           {message && (
-            <div className="mb-3 text-sm customYellow">{message}</div>
+            <p className="mb-3 text-sm text-red-500 font-concert">{message}</p>
           )}
-          {error && <div className="mb-3 text-sm text-red-500">{error}</div>}
+          {error && <p className="mb-3 text-sm text-red-500 font-concert">{error}</p>}
 
           <div className="mt-10">
             <div className="mb-4">

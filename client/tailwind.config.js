@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export const content = ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"];
 export const theme = {
   extend: {
@@ -10,7 +11,9 @@ export const theme = {
       kode: ['"Kode Mono"', "monospace"],
       concert: ['"Concert One"', "sans-serif"],
     },
-    fontSize: {},
+    fontSize: {
+      // Define your custom font sizes here, if needed
+    },
     colors: {
       customYellow: "#fff559",
       rgbYellow: "rgba(255,245,89,255)",

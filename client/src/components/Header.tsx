@@ -1,13 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/comski.png";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "../store/authSlice"; 
+import { logoutUser } from "../store/authSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-  const isLoggedIn = userInfo && userInfo.name;
+
+  const isLoggedIn = userInfo.token && userInfo.type === "login";
+
 
   const handleLogout = () => {
     dispatch(logoutUser());

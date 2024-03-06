@@ -3,10 +3,10 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const userModel = require("../models/userModel");
 
-const createToken = (_id) => {
+const createToken = (_id, type = "login" | "registration") => {
   const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-  return jwt.sign({ _id }, jwtSecretKey, { expiresIn: "3d" });
+  return jwt.sign({ _id, type }, jwtSecretKey, { expiresIn: "3d" });
 };
 
 const registerUser = async (req, res) => {
@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
     if (!validator.isEmail(email))
       return res.status(400).json("Email must be a valid email...");
 
-    if (!validator.isStrongPassword(password))
+    if (!validator.isStrongPassword(password, { minSymbols: 0 }))
       return res.status(400).json("Password must be a strong password..");
 
     const salt = await bcrypt.genSalt(10);
@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
 
     await user.save();
 
-    const token = createToken(user._id);
+    const token = createToken(user._id, "registration");
 
     res.status(200).json({ _id: user._id, name, email, token });
   } catch (error) {
@@ -46,14 +46,13 @@ const loginUser = async (req, res) => {
 
   try {
     let user = await userModel.findOne({ email });
-
     if (!user) return res.status(400).json("Invalid email or password...");
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword)
       return res.status(400).json("Invalid email or password...");
 
-    const token = createToken(user._id);
+    const token = createToken(user._id, "login");
 
     res.status(200).json({ _id: user._id, name: user.name, email, token });
   } catch (error) {
