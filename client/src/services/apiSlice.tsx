@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RegisterInfo, User } from "../models";
+import { ChatInfo, ChatResponse, ChatType, RegisterInfo, User } from "../models";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -20,8 +20,23 @@ export const apiSlice = createApi({
         body: credentials,
       }),
     }),
+
+    createChat: builder.mutation<ChatType, ChatInfo>({
+      query: (chatInfo) => ({
+        url: "/chats",
+        method: "POST",
+        body: chatInfo,
+      }),
+    }),
+    fetchChatsByUserId: builder.query<ChatResponse, string>({
+      query: (userId) => `/chats/${userId}`,
+    }),
   }),
 });
 
-// Export hooks for both mutations
-export const { useRegisterUserMutation, useLoginUserMutation } = apiSlice;
+export const {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useCreateChatMutation,
+  useFetchChatsByUserIdQuery,
+} = apiSlice;

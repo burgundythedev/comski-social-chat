@@ -9,11 +9,10 @@ export interface User {
 
 export interface AuthState {
   user: User | null;
-  isLoggedIn: boolean,
-  isLoggedInError: boolean,
-  isRegistered: boolean,
-  isRegisteredError: boolean,
-
+  isLoggedIn: boolean;
+  isLoggedInError: boolean;
+  isRegistered: boolean;
+  isRegisteredError: boolean;
 }
 
 export interface RegisterInfo {
@@ -31,5 +30,34 @@ export interface RegisterResponse {
 }
 export interface BackendError {
   status?: number;
-  data?: string; // If this is always a string for error messages
+  data?: string;
+}
+
+export interface Chat {
+  chatId: string;
+  members: string[];
+}
+
+export interface ChatState {
+  chats: Chat[];
+  loading: boolean;
+}
+
+export interface Message {
+  _id: string;
+  chatId: string;
+  senderId: string;
+  text: string;
+}
+
+export interface ChatType {
+  _id: string;
+  members: string[];
+}
+export interface ChatResponse {
+  chats: ChatType[];
+}
+
+export interface ChatInfo {
+  members: string[];
 }
