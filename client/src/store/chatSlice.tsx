@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChatType, ChatState, Chat } from "../models"; 
+import { ChatType, ChatState } from "../models";
 
 const initialState: ChatState = {
   chats: [],
@@ -10,33 +10,23 @@ export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    addChat: (state, action: PayloadAction<ChatType>) => {
-      const newChat: Chat = {
-        chatId: action.payload._id,
-        members: action.payload.members,
-      };
-      state.chats.push(newChat);
-    },
     getUserChats: (state, action: PayloadAction<ChatType[]>) => {
-      state.chats = action.payload.map(chatType => ({
-        chatId: chatType._id,
-        members: chatType.members,
-      }));
+      state.chats = action.payload;
     },
-    isChatsLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
+    addChat: (state, action: PayloadAction<ChatType>) => {
+      state.chats.push(action.payload);
     },
     removeChat: (state, action: PayloadAction<string>) => {
-      state.chats = state.chats.filter(chat => chat.chatId !== action.payload);
+      state.chats = state.chats.filter((chat) => chat._id !== action.payload);
     },
-    updateChat: (state, action: PayloadAction<ChatType & { chatId: string }>) => {
-      const index = state.chats.findIndex(chat => chat.chatId === action.payload._id);
-      if (index !== -1) {
-        state.chats[index] = action.payload;
-      }
+
+    isChatsLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
   },
 });
 
-export const { addChat, isChatsLoading, removeChat, updateChat, getUserChats } = chatSlice.actions;
+export const { getUserChats, addChat, removeChat, isChatsLoading } =
+  chatSlice.actions;
+
 export default chatSlice.reducer;

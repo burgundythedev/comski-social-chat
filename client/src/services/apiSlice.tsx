@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ChatInfo, ChatResponse, ChatType, RegisterInfo, User } from "../models";
+import {  ChatResponse, ChatType, RegisterInfo, User } from "../models";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -21,15 +21,22 @@ export const apiSlice = createApi({
       }),
     }),
 
-    createChat: builder.mutation<ChatType, ChatInfo>({
-      query: (chatInfo) => ({
-        url: "/chats",
-        method: "POST",
-        body: chatInfo,
-      }),
-    }),
     fetchChatsByUserId: builder.query<ChatResponse, string>({
       query: (userId) => `/chats/${userId}`,
+      
+    }),
+    fetchUsersByIds: builder.query<User[], string>({
+      query: (ids) => `/users?ids=${ids}`,
+    }),
+    fetchRegisteredUsers: builder.query<User[], void>({
+      query: () => "/users",
+    }),
+    createChat: builder.mutation<ChatType, { firstId: string; secondId: string }>({
+      query: (members) => ({
+        url: "/chats",
+        method: "POST",
+        body: members,
+      }),
     }),
   }),
 });
@@ -37,6 +44,9 @@ export const apiSlice = createApi({
 export const {
   useRegisterUserMutation,
   useLoginUserMutation,
-  useCreateChatMutation,
   useFetchChatsByUserIdQuery,
+  useFetchUsersByIdsQuery,
+  useFetchRegisteredUsersQuery,
+    useCreateChatMutation,
+
 } = apiSlice;

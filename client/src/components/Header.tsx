@@ -21,7 +21,7 @@ const Header = () => {
     <div className="container mx-auto flex justify-between items-center py-10">
       <Link to="/" className="flex items-center">
         <img src={logo} alt="logo-company" className="h-10 mr-10 rounded-md" />
-        <span className="font-semibold text-3xl font-kode">COMSKI SOCIAL</span>
+        <span className="font-semibold text-3xl font-kode">BROSKI SOCIAL</span>
       </Link>
       <nav>
         <ul className="flex space-x-4">

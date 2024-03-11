@@ -1,3 +1,5 @@
+//Auth related
+
 export interface User {
   _id: string;
   token: string;
@@ -33,23 +35,18 @@ export interface BackendError {
   data?: string;
 }
 
+//Chat related
+
 export interface Chat {
-  chatId: string;
+  _id: string;
   members: string[];
 }
 
 export interface ChatState {
   chats: Chat[];
   loading: boolean;
-}
 
-export interface Message {
-  _id: string;
-  chatId: string;
-  senderId: string;
-  text: string;
 }
-
 export interface ChatType {
   _id: string;
   members: string[];
@@ -60,4 +57,13 @@ export interface ChatResponse {
 
 export interface ChatInfo {
   members: string[];
+}
+
+//Message related
+
+export interface Message {
+  _id: string;
+  chatId: string;
+  senderId: string;
+  text: string;
 }
