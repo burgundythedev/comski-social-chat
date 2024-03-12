@@ -1,20 +1,28 @@
+import  { useEffect, useState } from 'react';
 import {
   useFetchRegisteredUsersQuery,
   useCreateChatMutation,
-} from "../services/apiSlice";
+} from "../../services/apiSlice";
 
 const OnlineUser = () => {
   const { data: users, isLoading } = useFetchRegisteredUsersQuery();
   const [createChat, { isSuccess, isError, isLoading: isCreating }] =
     useCreateChatMutation();
+  const [chattedUsers, setChattedUsers] = useState(() => {
+    // Load chatted users from localStorage
+    const saved = localStorage.getItem('chattedUsers');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const loggedInUserId = userInfo._id;
 
-  if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    // Update localStorage whenever chattedUsers changes
+    localStorage.setItem('chattedUsers', JSON.stringify([...chattedUsers]));
+  }, [chattedUsers]);
 
-  const filteredUsers =
-    users?.filter((user) => user._id !== loggedInUserId) || [];
+  if (isLoading) return <div>Loading...</div>;
 
   const handleCreateChat = async (secondUserId: string) => {
     try {
@@ -23,10 +31,18 @@ const OnlineUser = () => {
         secondId: secondUserId,
       }).unwrap();
       console.log("Chat created successfully", result);
+      setChattedUsers(prev => {
+        const updated = new Set(prev.add(secondUserId));
+        localStorage.setItem('chattedUsers', JSON.stringify([...updated])); // Update localStorage immediately as well
+        return updated;
+      });
     } catch (err) {
       console.error("Failed to create chat:", err);
     }
   };
+
+  const filteredUsers =
+    users?.filter(user => user._id !== loggedInUserId && !chattedUsers.has(user._id)) || [];
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useRegisterUserMutation } from "../services/apiSlice";
-import { BackendError, RegisterInfo } from "../models";
+import { useRegisterUserMutation } from "../../services/apiSlice";
+import { BackendError, RegisterInfo } from "../../models";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {

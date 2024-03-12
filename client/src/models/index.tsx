@@ -37,26 +37,29 @@ export interface BackendError {
 
 //Chat related
 
-export interface Chat {
-  _id: string;
-  members: string[];
-}
-
 export interface ChatState {
-  chats: Chat[];
+  chats: ChatType[];
   loading: boolean;
+  currentChat: ChatType | null;
+}
 
-}
-export interface ChatType {
-  _id: string;
-  members: string[];
-}
 export interface ChatResponse {
   chats: ChatType[];
 }
 
-export interface ChatInfo {
+export interface ChatType {
+  _id: string;
   members: string[];
+  createdAt: string;
+  lastMessage?: {
+    _id: string;
+    text: string;
+    createdAt: string;
+  };
+}
+
+export interface ChatWithMetadata extends ChatType {
+  unreadMessageCount: number;
 }
 
 //Message related
@@ -66,4 +69,19 @@ export interface Message {
   chatId: string;
   senderId: string;
   text: string;
+  createdAt: string;
 }
+
+//Date Format
+
+export const formatDate = (dateString: string | number | Date) => {
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

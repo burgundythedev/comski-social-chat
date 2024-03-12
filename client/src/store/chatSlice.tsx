@@ -4,6 +4,7 @@ import { ChatType, ChatState } from "../models";
 const initialState: ChatState = {
   chats: [],
   loading: false,
+  currentChat: null,
 };
 
 export const chatSlice = createSlice({
@@ -19,6 +20,10 @@ export const chatSlice = createSlice({
     removeChat: (state, action: PayloadAction<string>) => {
       state.chats = state.chats.filter((chat) => chat._id !== action.payload);
     },
+    setCurrentChat: (state, action: PayloadAction<ChatType | null>) => {
+      state.currentChat = action.payload;
+      console.log("Current chat set to:", action.payload);
+    },
 
     isChatsLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -26,7 +31,7 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { getUserChats, addChat, removeChat, isChatsLoading } =
+export const { getUserChats, addChat, removeChat, isChatsLoading, setCurrentChat } =
   chatSlice.actions;
 
 export default chatSlice.reducer;

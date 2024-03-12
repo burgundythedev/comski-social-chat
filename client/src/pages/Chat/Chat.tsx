@@ -13,7 +13,7 @@ const Chat = () => {
           <ChatLists />
         </div>
         <div className="w-3/4 bg-white">
-          <ChatBox />
+          <ChatBox  />
         </div>
       </div>
     </div>

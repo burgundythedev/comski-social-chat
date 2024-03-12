@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import {  ChatResponse, ChatType, RegisterInfo, User } from "../models";
+import { ChatResponse, ChatType, Message, RegisterInfo, User } from "../models";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -23,7 +23,6 @@ export const apiSlice = createApi({
 
     fetchChatsByUserId: builder.query<ChatResponse, string>({
       query: (userId) => `/chats/${userId}`,
-      
     }),
     fetchUsersByIds: builder.query<User[], string>({
       query: (ids) => `/users?ids=${ids}`,
@@ -31,12 +30,18 @@ export const apiSlice = createApi({
     fetchRegisteredUsers: builder.query<User[], void>({
       query: () => "/users",
     }),
-    createChat: builder.mutation<ChatType, { firstId: string; secondId: string }>({
+    createChat: builder.mutation<
+      ChatType,
+      { firstId: string; secondId: string }
+    >({
       query: (members) => ({
         url: "/chats",
         method: "POST",
         body: members,
       }),
+    }),
+    fetchMessagesByChatId: builder.query<Message[], string>({
+      query: (chatId) => `/messages/${chatId}`,
     }),
   }),
 });
@@ -47,6 +52,6 @@ export const {
   useFetchChatsByUserIdQuery,
   useFetchUsersByIdsQuery,
   useFetchRegisteredUsersQuery,
-    useCreateChatMutation,
-
+  useCreateChatMutation,
+  useFetchMessagesByChatIdQuery,
 } = apiSlice;
