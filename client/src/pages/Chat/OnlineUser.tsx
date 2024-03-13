@@ -1,48 +1,40 @@
-import  { useEffect, useState } from 'react';
+
 import {
   useFetchRegisteredUsersQuery,
   useCreateChatMutation,
+  useFetchChatsByUserIdQuery, // Assuming you have this hook to fetch chats
 } from "../../services/apiSlice";
 
 const OnlineUser = () => {
-  const { data: users, isLoading } = useFetchRegisteredUsersQuery();
-  const [createChat, { isSuccess, isError, isLoading: isCreating }] =
-    useCreateChatMutation();
-  const [chattedUsers, setChattedUsers] = useState(() => {
-    // Load chatted users from localStorage
-    const saved = localStorage.getItem('chattedUsers');
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
-
+  const { data: users, isLoading: loadingUsers } = useFetchRegisteredUsersQuery();
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const loggedInUserId = userInfo._id;
 
-  useEffect(() => {
-    // Update localStorage whenever chattedUsers changes
-    localStorage.setItem('chattedUsers', JSON.stringify([...chattedUsers]));
-  }, [chattedUsers]);
+  // Fetch chats for the logged-in user
+  const { data: chats, isLoading: loadingChats } = useFetchChatsByUserIdQuery(loggedInUserId);
+  const [createChat, { isSuccess, isError, isLoading: isCreating }] = useCreateChatMutation();
 
-  if (isLoading) return <div>Loading...</div>;
+  // Utility to check if a user has been chatted with
+  const hasChattedWith = (userId: string) => {
+    return Array.isArray(chats) && chats.some(chat => chat.members.includes(userId));
+  };
+
+  if (loadingUsers || loadingChats) return <div>Loading...</div>;
 
   const handleCreateChat = async (secondUserId: string) => {
     try {
-      const result = await createChat({
+      await createChat({
         firstId: loggedInUserId,
         secondId: secondUserId,
       }).unwrap();
-      console.log("Chat created successfully", result);
-      setChattedUsers(prev => {
-        const updated = new Set(prev.add(secondUserId));
-        localStorage.setItem('chattedUsers', JSON.stringify([...updated])); // Update localStorage immediately as well
-        return updated;
-      });
+      console.log("Chat created successfully");
     } catch (err) {
       console.error("Failed to create chat:", err);
     }
   };
 
-  const filteredUsers =
-    users?.filter(user => user._id !== loggedInUserId && !chattedUsers.has(user._id)) || [];
+  // Filter out logged-in user and users with whom a chat already exists
+  const filteredUsers = users?.filter(user => user._id !== loggedInUserId && !hasChattedWith(user._id)) || [];
 
   return (
     <div>
@@ -50,9 +42,7 @@ const OnlineUser = () => {
         {filteredUsers.map((user) => (
           <li
             key={user._id}
-            className={`mr-4 mb-2 bg-customYellow p-2 rounded-lg cursor-pointer hover:bg-blue-300 ${
-              isCreating ? "opacity-50" : ""
-            }`}
+            className={`mr-4 mb-2 bg-customYellow p-2 rounded-lg cursor-pointer hover:bg-blue-300 ${isCreating ? "opacity-50" : ""}`}
             onClick={() => handleCreateChat(user._id)}
             aria-disabled={isCreating}
           >

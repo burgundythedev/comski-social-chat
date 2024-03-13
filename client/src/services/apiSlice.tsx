@@ -43,6 +43,17 @@ export const apiSlice = createApi({
     fetchMessagesByChatId: builder.query<Message[], string>({
       query: (chatId) => `/messages/${chatId}`,
     }),
+
+    sendChatMessage: builder.mutation<
+      Message,
+      { chatId: string; senderId: string; text: string }
+    >({
+      query: ({ chatId, senderId, text }) => ({
+        url: `/messages/${chatId}`,
+        method: "POST",
+        body: { chatId, senderId, text },
+      }),
+    }),
   }),
 });
 
@@ -54,4 +65,5 @@ export const {
   useFetchRegisteredUsersQuery,
   useCreateChatMutation,
   useFetchMessagesByChatIdQuery,
+  useSendChatMessageMutation,
 } = apiSlice;

@@ -1,14 +1,34 @@
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { useFetchMessagesByChatIdQuery } from "../../services/apiSlice";
+import {
+  useFetchMessagesByChatIdQuery,
+  useSendChatMessageMutation,
+} from "../../services/apiSlice";
+import InputEmoji from "react-input-emoji";
 import { formatDate } from "../../models";
 
 const ChatBox = () => {
   const currentChat = useSelector((state: RootState) => state.chat.currentChat);
   const chatId = currentChat?._id;
+  const [messageText, setMessageText] = useState("");
+  
+  const [sendChatMessage] = useSendChatMessageMutation();
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  const senderId: string = userInfo._id;
 
-  const { data: messages, isLoading, error } = useFetchMessagesByChatIdQuery(chatId ?? "", { skip: !chatId });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!messageText.trim() || !chatId) return;
+    await sendChatMessage({ chatId, senderId, text: messageText });
+    setMessageText("");
+  };
 
+  const {
+    data: messages,
+    isLoading,
+    error,
+  } = useFetchMessagesByChatIdQuery(chatId ?? "", { skip: !chatId });
 
   if (isLoading) return <div>Loading messages...</div>;
   if (error) return <div>Error loading messages</div>;
@@ -26,20 +46,27 @@ const ChatBox = () => {
             </div>
           ))
         ) : (
-          <div>No messages found</div>
+          <div>Start to chat!</div>
         )}
       </div>
       <div className="p-4 border-t border-gray-200">
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            placeholder="Type a message..."
-            className="flex-1 p-2 border rounded"
-          />
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Send
-          </button>
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="flex space-x-2">
+            <div className="flex-1 p-2 border rounded border-customYellow">
+              <InputEmoji
+                value={messageText}
+                onChange={setMessageText}
+                placeholder="Type a message..."
+              />
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Send
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
