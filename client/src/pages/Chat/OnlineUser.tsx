@@ -2,7 +2,7 @@
 import {
   useFetchRegisteredUsersQuery,
   useCreateChatMutation,
-  useFetchChatsByUserIdQuery, // Assuming you have this hook to fetch chats
+  useFetchChatsByUserIdQuery,
 } from "../../services/apiSlice";
 
 const OnlineUser = () => {

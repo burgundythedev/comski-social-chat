@@ -69,7 +69,7 @@ const ChatList = () => {
   if (errorChats) return <div>Error fetching chats</div>;
 
   return (
-    <div>
+    <div >
       <h2 className="text-2xl font-semibold my-">Chats</h2>
       <ul>
         {chatData?.chats.map((chat) => (

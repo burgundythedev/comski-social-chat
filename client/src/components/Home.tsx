@@ -1,10 +1,8 @@
-import React from "react";
-
 const Home = () => {
   return (
     <div className="font-sans min-h-screen bg-gray-100 flex flex-col justify-center items-center">
       <h1 className="text-4xl font-bold mb-8">Welcome to Broski</h1>
-      
+
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
         <div className="mb-4">
           <h2 className="text-xl font-semibold">Join Broski</h2>
@@ -28,12 +26,9 @@ const Home = () => {
 
         <div className="mb-4">
           <h2 className="text-xl font-semibold">Stay Connected</h2>
-          <p className="text-gray-700 text-base">
+          <p className="text-gray-700 text-base py-2">
             Enjoy seamless chatting experiences with your close circle.
           </p>
-          <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-4">
-            Chat Now
-          </button>
         </div>
       </div>
     </div>
