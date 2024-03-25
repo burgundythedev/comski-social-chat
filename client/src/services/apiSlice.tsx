@@ -4,6 +4,8 @@ import { ChatResponse, ChatType, Message, RegisterInfo, User } from "../models";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000/api" }),
+  tagTypes: ["Chat", "Message"],
+
   endpoints: (builder) => ({
     registerUser: builder.mutation<User, RegisterInfo>({
       query: (userInfo) => ({
@@ -23,6 +25,7 @@ export const apiSlice = createApi({
 
     fetchChatsByUserId: builder.query<ChatResponse, string>({
       query: (userId) => `/chats/${userId}`,
+      providesTags: ["Chat"],
     }),
     fetchUsersByIds: builder.query<User[], string>({
       query: (ids) => `/users?ids=${ids}`,
@@ -39,9 +42,11 @@ export const apiSlice = createApi({
         method: "POST",
         body: members,
       }),
+      invalidatesTags: ["Chat"],
     }),
     fetchMessagesByChatId: builder.query<Message[], string>({
       query: (chatId) => `/messages/${chatId}`,
+      providesTags: (_, __, chatId) => [{ type: "Message", id: chatId }],
     }),
 
     sendChatMessage: builder.mutation<
@@ -51,7 +56,15 @@ export const apiSlice = createApi({
       query: ({ chatId, senderId, text }) => ({
         url: `/messages/${chatId}`,
         method: "POST",
-        body: { chatId, senderId, text },
+        body: { senderId, text },
+      }),
+      invalidatesTags: (_, __, { chatId }) => [{ type: "Message", id: chatId }],
+    }),
+
+    deleteChat: builder.mutation<{ success: boolean; chatId: string }, string>({
+      query: (chatId) => ({
+        url: `/deleteChat/${chatId}`,
+        method: "DELETE",
       }),
     }),
   }),
@@ -66,4 +79,5 @@ export const {
   useCreateChatMutation,
   useFetchMessagesByChatIdQuery,
   useSendChatMessageMutation,
+  useDeleteChatMutation,
 } = apiSlice;

@@ -72,6 +72,12 @@ export interface Message {
   createdAt: string;
 }
 
+//Socket related
+export interface UserOnlineInfo {
+  userID: string;
+  userSocketID: string;
+}
+
 //Date Format
 
 export const formatDate = (dateString: string | number | Date) => {
@@ -85,3 +91,6 @@ export const formatDate = (dateString: string | number | Date) => {
     minute: "2-digit",
   });
 };
+//others
+// Assuming you have a limited set of tags
+export type TagType = "Chats" | "Messages" | "Users";

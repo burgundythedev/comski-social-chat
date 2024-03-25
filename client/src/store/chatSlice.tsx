@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ChatType, ChatState } from "../models";
 
 
-
 const initialState: ChatState = {
   chats: [],
   loading: false,
@@ -19,9 +18,7 @@ export const chatSlice = createSlice({
     addChat: (state, action: PayloadAction<ChatType>) => {
       state.chats.push(action.payload);
     },
-    removeChat: (state, action: PayloadAction<string>) => {
-      state.chats = state.chats.filter((chat) => chat._id !== action.payload);
-    },
+
     setCurrentChat: (state, action: PayloadAction<ChatType | null>) => {
       state.currentChat = action.payload;
       console.log("Current chat set to:", action.payload);
@@ -33,7 +30,11 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { getUserChats, addChat, removeChat, isChatsLoading, setCurrentChat } =
-  chatSlice.actions;
+export const {
+  getUserChats,
+  addChat,
+  isChatsLoading,
+  setCurrentChat,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;
