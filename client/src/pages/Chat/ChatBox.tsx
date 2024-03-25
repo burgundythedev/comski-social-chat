@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import {
-  useFetchMessagesByChatIdQuery,
-  useSendChatMessageMutation,
-} from "../../services/apiSlice";
+import { useFetchMessagesByChatIdQuery, useSendChatMessageMutation } from "../../services/apiSlice";
 import InputEmoji from "react-input-emoji";
 import { formatDate } from "../../models";
 import socket from "../../services/socket";
@@ -18,17 +15,12 @@ const ChatBox = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
   const senderId = userInfo._id;
 
-  const {
-    data: messages,
-    isLoading,
-    error,
-    refetch,
-  } = useFetchMessagesByChatIdQuery(chatId ?? "", { skip: !chatId });
+  const { data: messages, isLoading, error, refetch } = useFetchMessagesByChatIdQuery(chatId ?? "", { skip: !chatId });
 
   useEffect(() => {
     socket.on("getMessage", (newMessage) => {
       if (newMessage.chatId === chatId) {
-        refetch();
+        refetch(); 
       }
     });
 
@@ -41,12 +33,7 @@ const ChatBox = () => {
     e.preventDefault();
     if (!messageText.trim() || !chatId) return;
 
-    const messageData = {
-      chatId,
-      senderId,
-      text: messageText,
-      receiverId: currentChat?.members.find((id) => id !== senderId),
-    }; // Adjust receiverId as needed
+    const messageData = { chatId, senderId, text: messageText, receiverId: currentChat?.members.find(id => id !== senderId) }; // Adjust receiverId as needed
     await sendChatMessage(messageData).unwrap();
     socket.emit("sendMessage", messageData);
     setMessageText("");
@@ -62,9 +49,7 @@ const ChatBox = () => {
           messages.map((message) => (
             <div key={message._id}>
               <div>{message.text}</div>
-              <div className="text-sm text-gray-500">
-                {formatDate(message.createdAt)}
-              </div>
+              <div className="text-sm text-gray-500">{formatDate(message.createdAt)}</div>
             </div>
           ))
         ) : (
@@ -75,16 +60,9 @@ const ChatBox = () => {
         <form onSubmit={handleSubmit}>
           <div className="flex space-x-2">
             <div className="flex-1">
-              <InputEmoji
-                value={messageText}
-                onChange={setMessageText}
-                placeholder="Type a message..."
-              />
+              <InputEmoji value={messageText} onChange={setMessageText} placeholder="Type a message..." />
             </div>
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               Send
             </button>
           </div>

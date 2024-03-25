@@ -60,12 +60,12 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: (_, __, { chatId }) => [{ type: "Message", id: chatId }],
     }),
-
     deleteChat: builder.mutation<{ success: boolean; chatId: string }, string>({
       query: (chatId) => ({
-        url: `/deleteChat/${chatId}`,
+        url: `/chats/${chatId}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Chat", id: "LIST" }, { type: "Message" }],
     }),
   }),
 });
