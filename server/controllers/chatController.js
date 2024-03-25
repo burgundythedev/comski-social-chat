@@ -43,4 +43,15 @@ const findChat = async (req, res) => {
   }
 };
 
-module.exports = { createChat, findUserChats, findChat };
+const deleteChat = async (req, res) => {
+  const { chatId } = req.params;
+
+  try {
+    await chatModel.findByIdAndDelete(chatId);
+    res.status(200).json({ message: "Chat deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createChat, findUserChats, findChat, deleteChat };
