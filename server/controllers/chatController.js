@@ -1,4 +1,5 @@
 const chatModel = require("../models/chatModel");
+const messageModel = require("../models/messageModel");
 
 const createChat = async (req, res) => {
   const { firstId, secondId } = req.body;
@@ -42,16 +43,22 @@ const findChat = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 const deleteChat = async (req, res) => {
   const { chatId } = req.params;
-
   try {
+    // Delete the chat
     await chatModel.findByIdAndDelete(chatId);
-    res.status(200).json({ message: "Chat deleted successfully" });
+    // Delete all messages associated with the chat
+    await messageModel.deleteMany({ chatId });
+
+    res
+      .status(200)
+      .json({ message: "Chat and associated messages deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred", error: error.message });
   }
 };
-
 module.exports = { createChat, findUserChats, findChat, deleteChat };
