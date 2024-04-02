@@ -21,10 +21,16 @@ export const theme = {
       kode: ['"Kode Mono"', "monospace"],
       concert: ['"Concert One"', "sans-serif"],
     },
-    fontSize: {},
+
     colors: {
       customYellow: "#fff559",
       rgbYellow: "rgba(255,245,89,255)",
+    },
+    width: {
+      128: "40rem", // Custom width
+    },
+    height: {
+      128: "40rem", // Custom height
     },
   },
 };

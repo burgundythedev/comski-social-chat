@@ -9,13 +9,15 @@ import {
 import { User, formatDate } from "../../models/index";
 import avatar from "../../assets/avatar.webp";
 import useLastMessages from "../../hooks/useFetchLastMessages";
+import socket from "../../services/socket";
 
 type UsersById = { [key: string]: User };
 
 const ChatList = () => {
   const dispatch = useDispatch();
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-  const [users, setUsers] = useState<UsersById>({});
+  const [users, setUsers] = useState<{ [key: string]: User }>({});
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [deleteChat] = useDeleteChatMutation();
 
   const {
@@ -24,6 +26,19 @@ const ChatList = () => {
     error: errorChats,
     refetch,
   } = useFetchChatsByUserIdQuery(userInfo._id);
+  useEffect(() => {
+    socket.on("getOnlineUsers", (onlineUsersList) => {
+      setOnlineUsers(
+        onlineUsersList.map((user: { userID: string }) => user.userID)
+      );
+    });
+
+    socket.emit("addNewUser", userInfo._id);
+
+    return () => {
+      socket.off("getOnlineUsers");
+    };
+  }, [userInfo._id]);
 
   useEffect(() => {
     if (chatData?.chats && chatData.chats.length > 0) {
@@ -56,10 +71,10 @@ const ChatList = () => {
   const handleDeleteChat = async (chatId: string) => {
     try {
       await deleteChat(chatId).unwrap();
-      console.log("Chat deleted successfully");
-      refetch(); // Manually trigger a refetch here
+
+      refetch();
     } catch (err) {
-      console.error("Failed to delete the chat:", err);
+      console.error("Error deleting chat", err);
     }
   };
 
@@ -67,8 +82,8 @@ const ChatList = () => {
   if (errorChats) return <div>Error fetching chats</div>;
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold my-4">Chats</h2>
+    <div className="font-kode">
+      <h2 className="text-2xl font-semibold my-4 ">Chats</h2>
       <ul>
         {chatData?.chats.map((chat) => (
           <div
@@ -76,30 +91,50 @@ const ChatList = () => {
             className="flex items-center space-x-4 p-4 border border-black rounded"
             onClick={() => dispatch(setCurrentChat(chat))}
           >
-            <img className="w-10 h-10 rounded-full" src={avatar} alt="Avatar" />
             <div className="flex-1">
               <p>
                 {chat.members
                   .filter((id) => id !== userInfo._id)
                   .map((id) => {
                     const displayName = users[id]?.name || "Unknown User";
-                    return <span key={id}>{displayName}</span>;
+                    const isOnline = onlineUsers.includes(id);
+                    return (
+                      <span key={id} className="flex items-center space-x-2">
+                        {isOnline && (
+                          <span className="block h-2 w-2 bg-green-500 rounded-full"></span>
+                        )}{" "}
+                        <img
+                          className="w-5 h-5 rounded-full"
+                          src={avatar}
+                          alt="Avatar"
+                        />
+                        <span className="text-2xl ml-20 py-2">
+                          {displayName}
+                        </span>
+                      </span>
+                    );
                   })}
               </p>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-2xl py-2 font-concert">
                 {lastMessages[chat._id]?.text || "Start a chat"}
               </p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-500">
+              <p className="w-full text-xs text-gray-500">
                 {formatDate(
                   lastMessages[chat._id]?.createdAt ?? chat.createdAt
                 )}
               </p>
             </div>
-            <button onClick={() => handleDeleteChat(chat._id)}>
-              Delete Chat
-            </button>
+            <div className="">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); 
+                  handleDeleteChat(chat._id);
+                }}
+                className="text-red-500 text-5xl font-bold font-concert"
+              >
+                X
+              </button>
+            </div>
           </div>
         ))}
       </ul>

@@ -10,7 +10,6 @@ const Header = () => {
 
   const isLoggedIn = userInfo.token && userInfo.type === "login";
 
-
   const handleLogout = () => {
     dispatch(logoutUser());
     localStorage.removeItem("userInfo");
@@ -18,7 +17,7 @@ const Header = () => {
   };
 
   return (
-    <div className="container mx-auto flex justify-between items-center py-10">
+    <div className=" flex justify-between items-center py-10 w-full font-kode">
       <Link to="/" className="flex items-center">
         <img src={logo} alt="logo-company" className="h-10 mr-10 rounded-md" />
         <span className="font-semibold text-3xl font-kode">BROSKI SOCIAL</span>
@@ -27,11 +26,11 @@ const Header = () => {
         <ul className="flex space-x-4">
           {isLoggedIn ? (
             <>
-              <li className="text-gray-700 font-kode text-2xl ml-4">
+              <li className="text-gray-700 text-2xl">
                 Welcome, {userInfo.name}
               </li>
               <li
-                className="text-gray-700 hover:text-gray-900 font-kode text-2xl ml-4 cursor-pointer bg-customYellow"
+                className="text-gray-700 hover:text-gray-900 text-2xl cursor-pointer bg-customYellow"
                 onClick={handleLogout}
               >
                 Logout
@@ -41,13 +40,13 @@ const Header = () => {
             <>
               <Link
                 to="register"
-                className="text-gray-700 hover:text-gray-900 font-kode text-2xl ml-4"
+                className="text-gray-700 hover:text-gray-900 text-2xl"
               >
                 Register
               </Link>
               <Link
                 to="login"
-                className="text-gray-700 hover:text-gray-900 font-kode text-2xl ml-4"
+                className="text-gray-700 hover:text-gray-900 text-2xl"
               >
                 Login
               </Link>
