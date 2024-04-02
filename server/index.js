@@ -52,6 +52,22 @@ io.on("connection", (socket) => {
     console.log(onlineUsers);
     io.emit("getOnlineUsers", onlineUsers);
   });
+  socket.on("sendMessage", ({ chatId, senderId, text, receiverId }) => {
+    const receiver = onlineUsers.find((user) => user.userID === receiverId);
+    if (receiver) {
+      io.to(receiver.socketID).emit("receiveMessage", {
+        chatId,
+        senderId,
+        text,
+      });
+
+      io.to(receiver.socketID).emit("receiveNotification", {
+        senderId,
+        message: "new message!",
+      });
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
     const userIndex = onlineUsers.findIndex(
