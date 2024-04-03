@@ -55,16 +55,16 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", ({ chatId, senderId, text, receiverId }) => {
     const receiver = onlineUsers.find((user) => user.userID === receiverId);
     if (receiver) {
-      io.to(receiver.socketID).emit("receiveMessage", {
+      const message = {
         chatId,
         senderId,
         text,
-      });
+        unread: true,
+      };
 
-      io.to(receiver.socketID).emit("receiveNotification", {
-        senderId,
-        message: "new message!",
-      });
+      io.to(receiver.socketID).emit("receiveMessage", message);
+
+      io.to(receiver.socketID).emit("unreadMessage", { chatId, unread: true });
     }
   });
 
