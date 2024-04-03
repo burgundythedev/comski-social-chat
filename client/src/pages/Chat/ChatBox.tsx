@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import {
   useFetchMessagesByChatIdQuery,
   useSendChatMessageMutation,
+  useFetchUsersByIdsQuery,
 } from "../../services/apiSlice";
 import InputEmoji from "react-input-emoji";
 import { formatDate } from "../../models";
@@ -23,7 +24,24 @@ const ChatBox = () => {
   } = useFetchMessagesByChatIdQuery(currentChat?._id ?? "", {
     skip: !currentChat,
   });
+  const senderIds = useMemo(() => {
+    const ids = messages?.map((message) => message.senderId) || [];
+    return [...new Set(ids)].join(",");
+  }, [messages]);
 
+  const { data: users } = useFetchUsersByIdsQuery(senderIds, {
+    skip: !senderIds,
+  });
+
+  // Map users by their ID for easy access
+  const usersById = useMemo(() => {
+    return (
+      users?.reduce((acc: { [key: string]: unknown }, user) => {
+        acc[user._id] = user;
+        return acc;
+      }, {}) || {}
+    );
+  }, [users]);
   useEffect(() => {
     socket.on("receiveMessage", (newMessage) => {
       if (newMessage.chatId === currentChat?._id) {
@@ -68,34 +86,40 @@ const ChatBox = () => {
     return () => {
       document.removeEventListener("keydown", handleEnterPress);
     };
-  }, [messageText, currentChat, handleSubmit]); // Dependencies for the effect
+  }, [handleSubmit]);
 
   if (isLoading) return <div>Loading messages...</div>;
   if (error) return <div>Error loading messages</div>;
 
   return (
-    <div className="flex flex-col h-screen w-screen font-concert">
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="px-4 flex flex-col h-screen w-full max-w-screen overflow-hidden font-concert">
+      <div className="flex-1 overflow-y-auto">
         {messages && messages.length > 0 ? (
           messages.map((message) => (
             <div
               ref={scroll}
               key={message._id}
-              className="mb-4 p-3 rounded-lg bg-white shadow"
-              style={{ maxWidth: "75%" }}
+              className="mb-4 p-5 rounded-lg bg-white shadow"
             >
-              <p>{message.text}</p>
-              <p className="text-sm text-gray-500">
-                {formatDate(message.createdAt)}
-              </p>
+              <div className="text-xl font-kode">
+                {(usersById[message.senderId] as { name: string })?.name ||
+                  "Unknown User"}
+              </div>
+              <div className="flex flex-row items-center justify-between mt-5">
+                <p>{message.text}</p>
+                <p className="text-sm text-gray-500">
+                  {formatDate(message.createdAt)}
+                </p>
+              </div>
             </div>
           ))
         ) : (
           <div>No messages yet. Start a conversation!</div>
         )}
       </div>
-      <div className="p-4 border-t border-gray-200">
-        <form onSubmit={handleSubmit}>
+
+      <div className="p-4 border-t border-gray">
+        <form className="flex flex-row" onSubmit={handleSubmit}>
           <InputEmoji
             value={messageText}
             onChange={setMessageText}

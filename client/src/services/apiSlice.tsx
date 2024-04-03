@@ -30,6 +30,7 @@ export const apiSlice = createApi({
     fetchUsersByIds: builder.query<User[], string>({
       query: (ids) => `/users?ids=${ids}`,
     }),
+    
     fetchRegisteredUsers: builder.query<User[], void>({
       query: () => "/users",
     }),

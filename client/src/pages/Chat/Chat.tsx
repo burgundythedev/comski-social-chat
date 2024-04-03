@@ -6,17 +6,17 @@ const Chat = () => {
   const isLoggedIn = !!localStorage.getItem("userInfo");
 
   return (
-    <div className="container mx-auto flex flex-col justify-between items-center py-10 space-y-4">
+    <div>
       {isLoggedIn && (
-        <div className="w-full">
+        <div className=" py-10">
           <OnlineUser />
         </div>
       )}
-      <div className="flex w-full">
-        <div className="w-1/4 bg-gray-100">
+      <div className="flex">
+        <div className="w-1/4 bg-rgbYellow rounded-lg">
           <ChatLists />
         </div>
-        <div className="w-3/4 bg-white">
+        <div className="flex-grow  bg-white overflow-hidden">
           <ChatBox />
         </div>
       </div>

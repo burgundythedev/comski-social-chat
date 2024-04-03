@@ -65,6 +65,7 @@ export interface ChatWithMetadata extends ChatType {
 //Message related
 
 export interface Message {
+  senderName: string;
   _id: string;
   chatId: string;
   senderId: string;

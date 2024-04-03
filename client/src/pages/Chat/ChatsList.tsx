@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentChat } from "../../store/chatSlice";
 import {
   useDeleteChatMutation,
@@ -8,8 +8,10 @@ import {
 } from "../../services/apiSlice";
 import { User, formatDate } from "../../models/index";
 import avatar from "../../assets/avatar.webp";
+import trashIcon from "../../assets/delete.png";
 import useLastMessages from "../../hooks/useFetchLastMessages";
 import socket from "../../services/socket";
+import { RootState } from "../../store/store";
 
 type UsersById = { [key: string]: User };
 
@@ -19,6 +21,8 @@ const ChatList = () => {
   const [users, setUsers] = useState<{ [key: string]: User }>({});
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [deleteChat] = useDeleteChatMutation();
+  const currentChat = useSelector((state: RootState) => state.chat.currentChat);
+  const [unreadChats, setUnreadChats] = useState<string[]>([]);
 
   const {
     data: chatData,
@@ -39,6 +43,21 @@ const ChatList = () => {
       socket.off("getOnlineUsers");
     };
   }, [userInfo._id]);
+  useEffect(() => {
+    socket.on("unreadMessage", ({ chatId, unread }) => {
+      if (unread) {
+        setUnreadChats((prevUnreadChats) => [...prevUnreadChats, chatId]);
+      } else {
+        setUnreadChats((prevUnreadChats) =>
+          prevUnreadChats.filter((id) => id !== chatId)
+        );
+      }
+    });
+
+    return () => {
+      socket.off("unreadMessage");
+    };
+  }, []);
 
   useEffect(() => {
     if (chatData?.chats && chatData.chats.length > 0) {
@@ -77,22 +96,41 @@ const ChatList = () => {
       console.error("Error deleting chat", err);
     }
   };
+  const truncateMessage = (message: string, maxLength = 10) => {
+    if (message.length > maxLength) {
+      return `${message.substring(0, maxLength)}...`;
+    } else {
+      return message;
+    }
+  };
 
   if (isLoadingChats) return <div>Loading chats...</div>;
   if (errorChats) return <div>Error fetching chats</div>;
 
   return (
     <div className="font-kode">
-      <h2 className="text-2xl font-semibold my-4 ">Chats</h2>
-      <ul>
+      <h2 className="text-2xl font-semibold p-5">Chats</h2>
+      <ul className="p-5">
         {chatData?.chats.map((chat) => (
           <div
             key={chat._id}
-            className="flex items-center space-x-4 p-4 border border-black rounded"
-            onClick={() => dispatch(setCurrentChat(chat))}
+            className={`flex flex-col p-4 border border-black rounded mb-5 cursor-pointer ${
+              unreadChats.includes(chat._id)
+                ? "bg-blue-100 animate-pulse"
+                : currentChat && chat._id === currentChat._id
+                ? "bg-blue-100"
+                : "bg-white"
+            }`}
+            onClick={() => {
+              dispatch(setCurrentChat(chat));
+              // When a chat is clicked, consider all messages in it as read
+              setUnreadChats((prevUnreadChats) =>
+                prevUnreadChats.filter((id) => id !== chat._id)
+              );
+            }}
           >
             <div className="flex-1">
-              <p>
+              <div className="flex flex-row justify-between">
                 {chat.members
                   .filter((id) => id !== userInfo._id)
                   .map((id) => {
@@ -100,9 +138,6 @@ const ChatList = () => {
                     const isOnline = onlineUsers.includes(id);
                     return (
                       <span key={id} className="flex items-center space-x-2">
-                        {isOnline && (
-                          <span className="block h-2 w-2 bg-green-500 rounded-full"></span>
-                        )}{" "}
                         <img
                           className="w-5 h-5 rounded-full"
                           src={avatar}
@@ -111,28 +146,39 @@ const ChatList = () => {
                         <span className="text-2xl ml-20 py-2">
                           {displayName}
                         </span>
+                        {isOnline && (
+                          <span className="block h-3 w-3 bg-green-500 rounded-full animate-pulse"></span>
+                        )}
                       </span>
                     );
                   })}
-              </p>
-              <p className="text-gray-600 text-2xl py-2 font-concert">
-                {lastMessages[chat._id]?.text || "Start a chat"}
-              </p>
-              <p className="w-full text-xs text-gray-500">
+                <p className="text-gray-600 text-xl py-2 font-concert">
+                  <p className="text-gray-600 text-xl py-2 font-concert">
+                    {lastMessages[chat._id]
+                      ? truncateMessage(lastMessages[chat._id]?.text || "")
+                      : "Start a chat"}
+                  </p>
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-row justify-between items-end">
+              <p className="w-full text-xs text-black">
                 {formatDate(
                   lastMessages[chat._id]?.createdAt ?? chat.createdAt
                 )}
               </p>
-            </div>
-            <div className="">
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); 
+                  e.stopPropagation();
                   handleDeleteChat(chat._id);
                 }}
-                className="text-red-500 text-5xl font-bold font-concert"
+                className="text-red-500 text-4xl font-bold font-concert hover:animate-pulse"
               >
-                X
+                <img
+                  className="w-10 hover:scale-125 transition-transform duration-1000"
+                  src={trashIcon}
+                  alt="trash-icon"
+                />
               </button>
             </div>
           </div>

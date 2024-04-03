@@ -15,7 +15,8 @@ const RedirectToChatOrLogin = () => {
 function App() {
   return (
     <>
-      <div className="mx-20">
+         <div className="mx-20 flex flex-col justify-between min-h-screen">
+
         <Header />
         <Routes>
           <Route path="/" element={<RedirectToChatOrLogin />} />

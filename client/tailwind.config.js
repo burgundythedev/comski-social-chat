@@ -8,9 +8,14 @@ export const theme = {
         "0%, 100%": { opacity: 0 },
         "50%": { opacity: 1 },
       },
+      scale: {
+        "0%, 100%": { transform: "scale(1)" },
+        "50%": { transform: "scale(1.2)" },
+      },
     },
     animation: {
       "fade-infinite": "fade 5s ease-in-out infinite",
+      "scale-loop": "scale 1s ease-in-out infinite",
     },
 
     spacing: {
@@ -24,13 +29,13 @@ export const theme = {
 
     colors: {
       customYellow: "#fff559",
-      rgbYellow: "rgba(255,245,89,255)",
+      rgbYellow: "rgba(255,245,89,0.7)",
     },
     width: {
       128: "40rem", // Custom width
     },
     height: {
-      128: "40rem", // Custom height
+      80: "80vh", // Custom height
     },
   },
 };
