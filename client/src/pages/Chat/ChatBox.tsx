@@ -43,12 +43,15 @@ const ChatBox = () => {
     );
   }, [users]);
   useEffect(() => {
-    socket.on("receiveMessage", (newMessage) => {
-      if (newMessage.chatId === currentChat?._id) {
-        refetch();
+    socket.on(
+      "receiveMessage",
+      (newMessage: { chatId: string | undefined }) => {
+        if (newMessage.chatId === currentChat?._id) {
+          refetch();
+        }
+        scroll.current?.scrollIntoView({ behavior: "smooth" });
       }
-      scroll.current?.scrollIntoView({ behavior: "smooth" });
-    });
+    );
 
     return () => {
       socket.off("receiveMessage");
@@ -92,7 +95,7 @@ const ChatBox = () => {
   if (error) return <div>Error loading messages</div>;
 
   return (
-    <div className="px-4 flex flex-col h-screen w-full max-w-screen overflow-hidden font-concert">
+    <div className="mx-10 flex h-full flex-col font-concert">
       <div className="flex-1 overflow-y-auto">
         {messages && messages.length > 0 ? (
           messages.map((message) => (
@@ -124,10 +127,14 @@ const ChatBox = () => {
             value={messageText}
             onChange={setMessageText}
             placeholder="Type a message..."
+            shouldReturn={false}
+            shouldConvertEmojiToImage={false}
           />
           <button
             type="submit"
-            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={!currentChat?._id}
+
+            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Send
           </button>

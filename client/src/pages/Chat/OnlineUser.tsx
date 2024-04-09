@@ -64,13 +64,14 @@ const OnlineUser = () => {
   if (loadingUsers || loadingChats) return <div>Loading...</div>;
 
   return (
-    <div className="font-kode">
+    <div className="font-kode h-full bg-rgbYellow rounded-xl">
+      <h2 className="text-xl p-4 font-bold">Online Users</h2>
       {displayUsers.length > 0 ? (
-        <ul className="flex flex-row flex-wrap">
+        <ul className="flex flex-col items-start flex-wrap p-4">
           {displayUsers.map((user) => (
             <li
               key={user._id}
-              className="relative mr-4 mb-2 bg-customYellow p-2 rounded-lg cursor-pointer hover:bg-blue-300 flex items-center"
+              className="relative mr-4 mb-2 bg-blue-200 p-2 rounded-lg cursor-pointer hover:bg-blue-300 flex items-center"
               onClick={() => handleCreateChat(user._id)}
             >
               {user.name}

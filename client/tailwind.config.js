@@ -32,10 +32,10 @@ export const theme = {
       rgbYellow: "rgba(255,245,89,0.7)",
     },
     width: {
-      128: "40rem", // Custom width
+      128: "40rem",
     },
     height: {
-      80: "80vh", // Custom height
+      80: "80vh",
     },
   },
 };

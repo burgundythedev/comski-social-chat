@@ -31,7 +31,7 @@ const ChatList = () => {
     refetch,
   } = useFetchChatsByUserIdQuery(userInfo._id);
   useEffect(() => {
-    socket.on("getOnlineUsers", (onlineUsersList) => {
+    socket.on("getOnlineUsers", (onlineUsersList: { userID: string; }[]) => {
       setOnlineUsers(
         onlineUsersList.map((user: { userID: string }) => user.userID)
       );
@@ -44,7 +44,7 @@ const ChatList = () => {
     };
   }, [userInfo._id]);
   useEffect(() => {
-    socket.on("unreadMessage", ({ chatId, unread }) => {
+    socket.on("unreadMessage", ({ chatId, unread }: { chatId: string, unread: boolean }) => {
       if (unread) {
         setUnreadChats((prevUnreadChats) => [...prevUnreadChats, chatId]);
       } else {
@@ -108,7 +108,7 @@ const ChatList = () => {
   if (errorChats) return <div>Error fetching chats</div>;
 
   return (
-    <div className="font-kode">
+    <div className="font-kode h-full">
       <h2 className="text-2xl font-semibold p-5">Chats</h2>
       <ul className="p-5">
         {chatData?.chats.map((chat) => (

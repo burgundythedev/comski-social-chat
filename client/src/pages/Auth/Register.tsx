@@ -52,19 +52,14 @@ const Register = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="px-10 py-10 mt-4 text-left bg-white shadow-lg w-3/4">
-        <form onSubmit={handleSubmit}>
-          {message && (
-            <p className="mb-3 text-sm text-red-500 font-concert">{message}</p>
-          )}
-          {error && <p className="mb-3 text-sm text-red-500 font-concert">{error}</p>}
+      <div className="px-10 py-10 mt-4 text-left bg-rgbYellow rounded-xl sm:w-3/4 md:w-2/3 lg:w-1/2">
+        {message && <p className="mb-3 text-sm text-red-500">{message}</p>}
+        {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
 
+        <form onSubmit={handleSubmit}>
           <div className="mt-10">
             <div className="mb-4">
-              <label
-                className="block mb-3 font-concert text-2xl"
-                htmlFor="name"
-              >
+              <label className="block mb-3 font-concert text-2xl" htmlFor="name">
                 Name
               </label>
               <input
@@ -78,10 +73,7 @@ const Register = () => {
               />
             </div>
             <div className="mb-4">
-              <label
-                className="block mb-3 font-concert text-2xl"
-                htmlFor="email"
-              >
+              <label className="block mb-3 font-concert text-2xl" htmlFor="email">
                 Email
               </label>
               <input
@@ -95,10 +87,7 @@ const Register = () => {
               />
             </div>
             <div className="mb-4">
-              <label
-                className="block mb-3 font-concert text-2xl"
-                htmlFor="password"
-              >
+              <label className="block mb-3 font-concert text-2xl" htmlFor="password">
                 Password
               </label>
               <input
@@ -114,7 +103,7 @@ const Register = () => {
             <div className="flex items-baseline justify-between">
               <button
                 type="submit"
-                className="px-6 py-2 mt-10 font-concert bg-customYellow rounded-lg hover:border border-gray-300"
+                className="px-6 py-2 mt-10 font-concert bg-blue-200 rounded-lg hover:border border-gray-300"
               >
                 Register
               </button>
@@ -125,5 +114,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;
