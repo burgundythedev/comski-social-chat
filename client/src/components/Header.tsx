@@ -17,27 +17,27 @@ const Header = () => {
   };
 
   return (
-    <div className="flex justify-between items-center py-5 w-full font-kode">
-      <Link to="/" className="flex items-center">
+    <div className="flex flex-row items-center justify-between p-5 font-kode">
+      <Link to="/" className="flex flex-row items-center">
         <img
           src={logo}
           alt="logo-company"
-          className="h-8 sm:h-10 mr-4 sm:mr-10 rounded-md"
+          className="w-14 h-14 rounded-lg"
         />
-        <span className="font-semibold text-2xl sm:text-3xl font-kode hidden sm:block">
+        <span className="hidden">
           BROSKI SOCIAL
         </span>
       </Link>
       <nav>
-        <ul className="flex space-x-2 sm:space-x-4">
+        <ul className="">
           {isLoggedIn ? (
             <>
-              <li className="text-lg sm:text-xl lg:text-2xl font-bold">
+              <li className="mb-2">
                 Welcome,
-                <span className="text-blue-500 underline ml-2">{userInfo.name}</span>
+                <span className="ml-1 text-blue-700">{userInfo.name}</span>
               </li>
               <li
-                className=" sm:text-xl lg:text-xl flex items-center font-bold cursor-pointer px-3 sm:px-4 py-1 lg:py-2 bg-customYellow rounded-md"
+                className="p-1 bg-customYellow rounded-lg cursor-pointer"
                 onClick={handleLogout}
               >
                 Logout
@@ -45,10 +45,10 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="register" className="text-xl sm:text-2xl">
+              <Link to="register" className="p-5">
                 Register
               </Link>
-              <Link to="login" className="text-xl sm:text-2xl">
+              <Link to="login" className="">
                 Login
               </Link>
             </>

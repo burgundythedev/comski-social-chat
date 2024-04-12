@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import {
@@ -9,6 +15,9 @@ import {
 import InputEmoji from "react-input-emoji";
 import { formatDate } from "../../models";
 import socket from "../../services/socket";
+import send from "../../assets/send.png";
+import ButtonReturn from "../../Layout/ButtonReturn";
+import useResponsive from "../../hooks/useResponsive";
 
 const ChatBox = () => {
   const currentChat = useSelector((state: RootState) => state.chat.currentChat);
@@ -16,6 +25,8 @@ const ChatBox = () => {
   const [messageText, setMessageText] = useState("");
   const [sendChatMessage] = useSendChatMessageMutation();
   const scroll = useRef<HTMLDivElement>(null);
+  const isWide = useResponsive(728);
+
   const {
     data: messages,
     isLoading,
@@ -24,6 +35,7 @@ const ChatBox = () => {
   } = useFetchMessagesByChatIdQuery(currentChat?._id ?? "", {
     skip: !currentChat,
   });
+
   const senderIds = useMemo(() => {
     const ids = messages?.map((message) => message.senderId) || [];
     return [...new Set(ids)].join(",");
@@ -33,7 +45,6 @@ const ChatBox = () => {
     skip: !senderIds,
   });
 
-  // Map users by their ID for easy access
   const usersById = useMemo(() => {
     return (
       users?.reduce((acc: { [key: string]: unknown }, user) => {
@@ -42,6 +53,7 @@ const ChatBox = () => {
       }, {}) || {}
     );
   }, [users]);
+
   useEffect(() => {
     socket.on(
       "receiveMessage",
@@ -57,6 +69,7 @@ const ChatBox = () => {
       socket.off("receiveMessage");
     };
   }, [currentChat, refetch]);
+
   const handleSubmit = useCallback(
     async (e?: React.FormEvent<HTMLFormElement>) => {
       e?.preventDefault();
@@ -75,7 +88,14 @@ const ChatBox = () => {
     },
     [messageText, currentChat, sendChatMessage, userInfo._id]
   );
-
+  useEffect(() => {
+    if (messages && messages.length > 0) {
+      setTimeout(() => {
+        scroll.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100); 
+    }
+  }, [messages]);
+  
   useEffect(() => {
     const handleEnterPress = (e: KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -95,24 +115,26 @@ const ChatBox = () => {
   if (error) return <div>Error loading messages</div>;
 
   return (
-    <div className="mx-10 flex h-full flex-col font-concert">
-      <div className="flex-1 overflow-y-auto">
+    <div className="min-h-screen font-concert flex flex-col justify-between py-5 px-5">
+      <div className="my-5">{!isWide && <ButtonReturn />}</div>
+      <div className="flex-grow overflow-auto">
         {messages && messages.length > 0 ? (
-          messages.map((message) => (
+          messages.map((message, index) => (
             <div
-              ref={scroll}
+              ref={index === messages.length - 1 ? scroll : undefined}
               key={message._id}
-              className="mb-4 p-5 rounded-lg bg-white shadow"
+              className="py-3"
             >
-              <div className="text-xl font-kode">
+              <p className="text-sm underline mb-2">
                 {(usersById[message.senderId] as { name: string })?.name ||
                   "Unknown User"}
-              </div>
-              <div className="flex flex-row items-center justify-between mt-5">
-                <p>{message.text}</p>
-                <p className="text-sm text-gray-500">
-                  {formatDate(message.createdAt)}
-                </p>
+              </p>
+              <div
+                className="bg-gray-100 rounded-xl p-2 overflow-hidden"
+                style={{ maxWidth: "30ch" }}
+              >
+                <p className="whitespace-normal break-words">{message.text}</p>
+                <p className="text-xs mt-5">{formatDate(message.createdAt)}</p>
               </div>
             </div>
           ))
@@ -121,23 +143,24 @@ const ChatBox = () => {
         )}
       </div>
 
-      <div className="p-4 border-t border-gray">
-        <form className="flex flex-row" onSubmit={handleSubmit}>
-          <InputEmoji
-            value={messageText}
-            onChange={setMessageText}
-            placeholder="Type a message..."
-            shouldReturn={false}
-            shouldConvertEmojiToImage={false}
-          />
-          <button
-            type="submit"
-            disabled={!currentChat?._id}
-
-            className="mt-2 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-400 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      <div className="w-full">
+        <form className=" flex flex-row items-center" onSubmit={handleSubmit}>
+          <div
+            style={{ minWidth: "27ch", maxWidth: "27ch", overflowX: "auto" }}
           >
-            Send
-          </button>
+            <InputEmoji
+              value={messageText}
+              onChange={setMessageText}
+              placeholder="Type a message..."
+              shouldReturn={false}
+              shouldConvertEmojiToImage={false}
+            />
+          </div>
+          <div className=" bg-customYellow p-1 rounded-lg hover:border flex items-center justify-center">
+            <button type="submit" disabled={!currentChat?._id} className="">
+              <img src={send} className="w-5 h-5" />
+            </button>
+          </div>
         </form>
       </div>
     </div>

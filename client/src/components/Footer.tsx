@@ -3,24 +3,33 @@ import linkedin from "../assets/linkedin.png";
 import github from "../assets/github.png";
 const Footer = () => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center py-5 text-gray-800 font-kode text-center sm:text-left">
-      <p className=" hidden sm:block text-sm mb-4 sm:mb-0">Broski</p>
-
-      <div className="flex items-center justify-center mb-4 sm:mb-0">
-        <Link to="https://www.linkedin.com/in/olivier-bourgogne/" className="mr-2" target="_blank" rel="noopener noreferrer">
-          <img src={linkedin} alt="LinkedIn" className="w-10 h-10 sm:w-3 sm:h-3" />
+    <div className="font-kode p-5">
+      <p className="hidden">Broski</p>
+      <div className="flex flex-row justify-between items-center">
+        <Link
+          to="https://www.linkedin.com/in/olivier-bourgogne/"
+          className=""
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={linkedin} alt="LinkedIn" className="w-5 h-5" />
         </Link>
-        <p className="text-s hidden sm:block">@broskisocialchat by Olivier Bourgogne</p>
-        <Link to="https://github.com/burgundythedev" className="ml-2" target="_blank" rel="noopener noreferrer">
-          <img src={github} alt="GitHub" className="w-10 h-10 " />
+        <p className="">
+          @broskisocialchat <span className="hidden">by Olivier Bourgogne</span>
+        </p>
+        <Link
+          to="https://github.com/burgundythedev"
+          className=""
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={github} alt="GitHub" className="w-5 h-5" />
         </Link>
       </div>
 
-      <p className="hidden sm:block  text-sm">Broski</p>
+      <p className="hidden">Broski</p>
     </div>
   );
 };
 
 export default Footer;
-
-

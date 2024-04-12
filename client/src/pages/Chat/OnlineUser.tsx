@@ -64,29 +64,36 @@ const OnlineUser = () => {
   if (loadingUsers || loadingChats) return <div>Loading...</div>;
 
   return (
-    <div className="font-kode h-full bg-rgbYellow rounded-xl">
-      <h2 className="text-xl p-4 font-bold">Online Users</h2>
-      {displayUsers.length > 0 ? (
-        <ul className="flex flex-col items-start flex-wrap p-4">
-          {displayUsers.map((user) => (
-            <li
-              key={user._id}
-              className="relative mr-4 mb-2 bg-blue-200 p-2 rounded-lg cursor-pointer hover:bg-blue-300 flex items-center"
-              onClick={() => handleCreateChat(user._id)}
-            >
-              {user.name}
-              {onlineUsers.includes(user._id) && (
-                <span className="absolute right-0 bottom-0 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
-              )}
-              {newMessageNotification && (
-                <p className="ml-2 text-xs">(New Message)</p>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div>Ask your friends and family to join to have more fun Chat!</div>
-      )}
+    <div className="font-kode">
+      <div>
+        <h2 className="text-xl font-semibold">Online Users</h2>
+      </div>
+      <div>
+        {displayUsers.length > 0 ? (
+          <ul className="flex flex-wrap flex-row mt-5">
+            {displayUsers.map((user) => (
+              <li
+                key={user._id}
+                className="bg-customYellow p-2 rounded-lg mr-2 my-2 cursor-pointer"
+                onClick={() => handleCreateChat(user._id)}
+              >
+                {user.name}
+                {onlineUsers.includes(user._id) && (
+                  <span className="inline-block bg-green-500 rounded-full w-3 h-3 animate-fade"></span>
+                )}
+
+                {newMessageNotification.includes(user._id) && (
+                  <p className="text-xs text-red-500">(New Message)</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="py-5">
+            Invite your friends and family to Broski for even more fun chats!
+          </div>
+        )}
+      </div>
     </div>
   );
 };

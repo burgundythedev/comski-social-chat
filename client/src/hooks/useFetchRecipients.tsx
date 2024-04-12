@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Chat, User } from "../models";
+import {  ChatType, User } from "../models";
 
-export const useFetchRecipients = (chat: Chat, user: User) => {
+export const useFetchRecipients = (chat: ChatType, user: User) => {
   const [recipients, setRecipients] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const recipientIds = chat.members
-    .filter((memberId) => memberId !== user._id)
+    .filter((memberId: string) => memberId !== user._id)
     .join(",");
 
   useEffect(() => {
