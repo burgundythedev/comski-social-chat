@@ -3,14 +3,14 @@ import home from "../assets/home-pic.png";
 
 const Home = () => {
   return (
-    <div className="font-kode px-2 mb-10">
-      <div>
+    <div className="w-full font-kode p-2 mb-10 lg:mb-0 lg:py-40">
+      <div className="flex flex-col lg:flex-row-reverse justify-evenly items-center">
         <div>
-          <img src={home} alt="Broski" />
+          <img src={home} alt="Broski" className="lg:w-96"/>
         </div>
-        <div className="text-center">
-          <h1 className="text-customYellow text-3xl font-bold">
-            Welcome to Broski
+        <div className="text-center lg:text-start">
+          <h1 className="text-black underline decoration-customYellow text-3xl font-bold lg:text-6xl mb-20">
+            Welcome to Broski!
           </h1>
           <div className="mt-5">
             <h2 className="font-bold mb-2">Join Broski</h2>

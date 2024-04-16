@@ -24,8 +24,8 @@ const ChatList = () => {
   const [deleteChat] = useDeleteChatMutation();
   const currentChat = useSelector((state: RootState) => state.chat.currentChat);
   const [unreadChats, setUnreadChats] = useState<string[]>([]);
-  const navigate = useNavigate(); 
-  const [isSmartphone, setIsSmartphone] = useState(false); 
+  const navigate = useNavigate();
+  const [isSmartphone, setIsSmartphone] = useState(false);
 
   const {
     data: chatData,
@@ -93,13 +93,12 @@ const ChatList = () => {
     const handleResize = () => {
       setIsSmartphone(window.innerWidth <= 768);
     };
-    
-   
-    handleResize();
-    
-    window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener('resize', handleResize);
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   const lastMessages = useLastMessages(
     chatData?.chats.map((chat) => chat._id) || []
@@ -137,11 +136,13 @@ const ChatList = () => {
     return <div className="font-kode p-2">Error fetching chats</div>;
 
   return (
-    <div className="font-kode">
+    <div className="font-kode flex flex-col grow">
       <h2 className="text-xl font-semibold mb-5">Chats</h2>
-      <ul className=" border-t border-black rounded-xl">
+      <ul className="flex-1 border-t border-black rounded-xl overflow-y-auto md:overflow-y-visible">
         {chatData?.chats.length === 0 ? (
-          <p className="text-center text-xl py-5 mt-20">Create a chat and enjoy</p>
+          <p className="text-center text-xl py-5 mt-20">
+            Create a chat and enjoy
+          </p>
         ) : (
           chatData?.chats.map((chat) => (
             <div
@@ -154,8 +155,6 @@ const ChatList = () => {
                   : "bg-white"
               }`}
               onClick={() => handleChatClick(chat)}
-
-             
             >
               <div>
                 <div>

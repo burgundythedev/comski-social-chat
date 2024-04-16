@@ -89,7 +89,7 @@ const OnlineUser = () => {
             ))}
           </ul>
         ) : (
-          <div className="py-5">
+          <div className="py-5 lg:text-xs">
             Invite your friends and family to Broski for even more fun chats!
           </div>
         )}

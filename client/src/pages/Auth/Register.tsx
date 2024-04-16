@@ -51,18 +51,19 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center font-kode">
-      <div className="px-10  text-left  rounded-xl">
-        <h1 className="text-4xl p-10 font-bold text-center">
-          Register
-        </h1>
+    <div className="flex items-center justify-center font-kode lg:py-40">
+      <div className="px-5  text-left  rounded-xl">
+        <h1 className="text-4xl p-4 font-bold text-center">Register</h1>
         {message && <p className="mb-3 text-sm text-red-500">{message}</p>}
         {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
 
         <form onSubmit={handleSubmit}>
           <div className="mt-10">
             <div className="mb-4">
-              <label className="block mb-3  text-md font-semibold" htmlFor="name">
+              <label
+                className="block mb-3  text-md font-semibold"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -76,7 +77,10 @@ const Register = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-3  text-md font-semibold" htmlFor="email">
+              <label
+                className="block mb-3  text-md font-semibold"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input

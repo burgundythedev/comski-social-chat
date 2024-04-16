@@ -32,8 +32,8 @@ export const theme = {
       rgbYellow: "rgba(255,245,89,0.7)",
     },
 
-    dateSize: {
-      15: "5px",
+    picSize: {
+      15: "500px",
     },
   },
 };

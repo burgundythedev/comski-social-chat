@@ -39,18 +39,21 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center font-kode">
+    <div className="flex items-start mt-10 justify-center font-kode lg:py-40">
       <div className="px-10 text-left rounded-xl">
-        <h1 className="text-4xl p-10 font-bold text-center">
-          Login
-        </h1>
+        <h1 className="text-4xl p-5 font-bold text-center">Login</h1>
         {message && <p className="mb-3 text-sm text-green-500">{message}</p>}
-        {loginError && <p className="mb-3 text-sm text-red-500">{loginError}</p>}
-
+        {loginError && (
+          <p className="mb-3 text-sm text-red-500">{loginError}</p>
+        )}
+        <h3 className="text-xl font-bold text-center">and enjoy! &#128512;</h3>
         <form onSubmit={handleSubmit}>
           <div className="mt-10">
             <div className="mb-4">
-              <label className="block mb-3 text-md font-semibold" htmlFor="email">
+              <label
+                className="block mb-3 text-md font-semibold"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -64,7 +67,10 @@ const Login = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-3 text-md font-semibold" htmlFor="password">
+              <label
+                className="block mb-3 text-md font-semibold"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input

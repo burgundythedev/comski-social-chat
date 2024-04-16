@@ -15,40 +15,44 @@ const Header = () => {
     localStorage.removeItem("userInfo");
     navigate("/login");
   };
-
+  const handleRedirectToChat = () => {
+    navigate("/chat");
+  };
   return (
     <div className="flex flex-row items-center justify-between p-5 font-kode">
-      <Link to="/" className="flex flex-row items-center">
-        <img
-          src={logo}
-          alt="logo-company"
-          className="w-14 h-14 rounded-lg"
-        />
-        <span className="hidden">
-          BROSKI SOCIAL
-        </span>
+      <Link to="/home" className="flex flex-row items-center">
+        <img src={logo} alt="logo-company" className="w-14 h-14 rounded-lg" />
+        <span className="hidden">BROSKI SOCIAL</span>
       </Link>
       <nav>
-        <ul className="">
+        <ul className="lg:flex flex-row">
           {isLoggedIn ? (
             <>
-              <li className="mb-2">
+              <li className="mb-2 lg:mb-0 mr-2">
                 Welcome,
-                <span className="ml-1 text-blue-700">{userInfo.name}</span>
+                <span className="ml-1 text-blue-700 font-extrabold">{userInfo.name}</span>
               </li>
-              <li
-                className="p-1 bg-customYellow rounded-lg cursor-pointer"
-                onClick={handleLogout}
-              >
-                Logout
-              </li>
+              <div className="flex flex-row">
+                <li
+                  className="p-1 text-sm mr-1 bg-customYellow rounded-lg cursor-pointer w-20 text-center"
+                  onClick={handleRedirectToChat}
+                >
+                  Chats
+                </li>
+                <li
+                  className="p-1 text-sm bg-customYellow rounded-lg cursor-pointer w-20 text-center"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </li>
+              </div>
             </>
           ) : (
             <>
               <Link to="register" className="p-5">
                 Register
               </Link>
-              <Link to="login" className="">
+              <Link to="login" className="p-5">
                 Login
               </Link>
             </>

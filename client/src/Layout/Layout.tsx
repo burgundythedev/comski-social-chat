@@ -4,18 +4,15 @@ import Header from "../components/Header";
 interface LayoutProps {
   children: React.ReactNode;
 }
-
 const Layout = ({ children }: LayoutProps) => {
-    return (
-      <div className="">
-        <Header />
-        <main className="">
-          {children}
-        </main>
-        <Footer />
-      </div>
-    );
-  };
-  
-  export default Layout;
-   
+  return (
+    <div className="flex flex-col min-h-screen overflow-hidden lg:p-2">
+      <Header />
+      <main className="grow">{children}</main>
+      <Footer />
+    </div>
+  );
+};
+
+
+export default Layout;

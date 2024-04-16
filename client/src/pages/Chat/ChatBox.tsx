@@ -92,10 +92,10 @@ const ChatBox = () => {
     if (messages && messages.length > 0) {
       setTimeout(() => {
         scroll.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100); 
+      }, 100);
     }
   }, [messages]);
-  
+
   useEffect(() => {
     const handleEnterPress = (e: KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -115,53 +115,64 @@ const ChatBox = () => {
   if (error) return <div>Error loading messages</div>;
 
   return (
-    <div className="min-h-screen font-concert flex flex-col justify-between py-5 px-5">
+    <div className="font-concert py-5 px-5">
       <div className="my-5">{!isWide && <ButtonReturn />}</div>
-      <div className="flex-grow overflow-auto">
-        {messages && messages.length > 0 ? (
-          messages.map((message, index) => (
-            <div
-              ref={index === messages.length - 1 ? scroll : undefined}
-              key={message._id}
-              className="py-3"
-            >
-              <p className="text-sm underline mb-2">
-                {(usersById[message.senderId] as { name: string })?.name ||
-                  "Unknown User"}
-              </p>
+      <div className="h-screen flex flex-col justify-between overflow-y-auto">
+        <div>
+          {messages && messages.length > 0 ? (
+            messages.map((message, index) => (
               <div
-                className="bg-gray-100 rounded-xl p-2 overflow-hidden"
-                style={{ maxWidth: "30ch" }}
+                ref={index === messages.length - 1 ? scroll : undefined}
+                key={message._id}
+                className="py-3"
               >
-                <p className="whitespace-normal break-words">{message.text}</p>
-                <p className="text-xs mt-5">{formatDate(message.createdAt)}</p>
+                <p className="text-sm underline mb-2">
+                  {(usersById[message.senderId] as { name: string })?.name ||
+                    "Unknown User"}
+                </p>
+                <div
+                  className="bg-gray-100 rounded-xl p-3 "
+                  style={{ maxWidth: "30ch" }}
+                >
+                  <p className="whitespace-normal break-words">
+                    {message.text}
+                  </p>
+                  <p className="text-xs mt-5">
+                    {formatDate(message.createdAt)}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <div>No messages yet. Start a conversation!</div>
-        )}
-      </div>
+            ))
+          ) : (
+            <div>No messages yet. Start a conversation!</div>
+          )}
+        </div>
 
-      <div className="w-full">
-        <form className=" flex flex-row items-center" onSubmit={handleSubmit}>
-          <div
-            style={{ minWidth: "27ch", maxWidth: "27ch", overflowX: "auto" }}
-          >
-            <InputEmoji
-              value={messageText}
-              onChange={setMessageText}
-              placeholder="Type a message..."
-              shouldReturn={false}
-              shouldConvertEmojiToImage={false}
-            />
-          </div>
-          <div className=" bg-customYellow p-1 rounded-lg hover:border flex items-center justify-center">
-            <button type="submit" disabled={!currentChat?._id} className="">
-              <img src={send} className="w-5 h-5" />
-            </button>
-          </div>
-        </form>
+        <div className="w-full">
+          <form className="flex items-center" onSubmit={handleSubmit}>
+            <div
+              className="flex-grow"
+              style={{ minWidth: "25ch", maxWidth: "200ch" }}
+            >
+              <InputEmoji
+                value={messageText}
+                onChange={setMessageText}
+                placeholder="Type a message..."
+                shouldReturn={false}
+                shouldConvertEmojiToImage={false}
+              />
+            </div>
+            <div className="flex-shrink-0 ml-2">
+              <button
+                type="submit"
+                disabled={!currentChat?._id}
+                className="bg-customYellow p-1 rounded-lg hover:border flex items-center justify-center"
+              >
+                <img src={send} className="w-5 h-5" />
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
