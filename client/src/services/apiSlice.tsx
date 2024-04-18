@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ChatResponse, ChatType, Message, RegisterInfo, User } from "../models";
-
+const baseURLAPI = import.meta.env.VITE_BASE_URL_API;
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://broski-social-chat-server.onrender.com/api",
+    baseUrl: baseURLAPI,
   }),
 
   tagTypes: ["Chat", "Message"],
