@@ -16,14 +16,13 @@ const app = express();
 
 // Security enhancements
 app.use(helmet());
+const corsOptions = {
+  origin: ["http://127.0.0.1:5173", "https://broski-social-chat.onrender.com"],
+  credentials: true, // because you're sending requests with credentials like cookies/tokens
+  optionsSuccessStatus: 200,
+};
 
-// CORS Configuration
-app.use(
-  cors({
-    origin: ["https://broski-social-chat.onrender.com"],
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 
 // Middleware for parsing JSON
 app.use(express.json());
@@ -38,6 +37,7 @@ app.use("/api/chats", chatRoute);
 app.use("/api/messages", userMessages);
 
 // Make sure all non-API requests return the index.html file, enabling SPA routing
+app.use(express.static("/home/olivierb/comski-social-chat/client/dist"));
 app.get("*", (req, res) => {
   res.sendFile(
     path.join("/home/olivierb/comski-social-chat/client/dist", "index.html")
@@ -45,16 +45,14 @@ app.get("*", (req, res) => {
 });
 
 // Set up HTTP server and Socket.IO
+const onlineUsers = [];
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://broski-social-chat.onrender.com"],
-    methods: ["GET", "POST"],
     credentials: true,
   },
 });
-
-const onlineUsers = [];
 
 io.on("connection", (socket) => {
   console.log("New connection:", socket.id);
@@ -96,7 +94,7 @@ io.on("connection", (socket) => {
 // MongoDB connection
 const uri = process.env.ATLAS_URI;
 mongoose
-  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(uri)
   .then(() =>
     console.log("MongoDB database connection established successfully")
   )

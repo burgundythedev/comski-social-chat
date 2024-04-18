@@ -116,7 +116,7 @@ const ChatBox = () => {
 
   return (
     <div className="font-concert py-5 px-5">
-      <div className="my-5">{!isWide && <ButtonReturn />}</div>
+      <div className="my-5">{isWide ? null : <ButtonReturn />}</div>
       <div className="h-screen flex flex-col justify-between overflow-y-auto">
         <div>
           {messages && messages.length > 0 ? (
