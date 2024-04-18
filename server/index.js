@@ -20,7 +20,7 @@ app.use(helmet());
 // CORS Configuration
 app.use(
   cors({
-    origin: ["https://broski-social-chat.onrender.com"],
+    origin: process.env.frontEND_URL,
     credentials: true,
   })
 );
@@ -48,7 +48,7 @@ app.get("*", (req, res) => {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["https://broski-social-chat.onrender.com"],
+    origin: process.env.frontEND_URL,
     methods: ["GET", "POST"],
     credentials: true,
   },
