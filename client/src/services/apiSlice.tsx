@@ -3,7 +3,10 @@ import { ChatResponse, ChatType, Message, RegisterInfo, User } from "../models";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000/api" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://broski-social-chat-server.onrender.com/api",
+  }),
+
   tagTypes: ["Chat", "Message"],
 
   endpoints: (builder) => ({
@@ -30,7 +33,7 @@ export const apiSlice = createApi({
     fetchUsersByIds: builder.query<User[], string>({
       query: (ids) => `/users?ids=${ids}`,
     }),
-    
+
     fetchRegisteredUsers: builder.query<User[], void>({
       query: () => "/users",
     }),
