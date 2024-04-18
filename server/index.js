@@ -1,43 +1,77 @@
+// Import required modules
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const http = require("http"); // Import http module
+const http = require("http");
+const path = require("path");
+const { Server } = require("socket.io");
+
+// Import routes
 const userRoute = require("./routes/userRoute");
 const chatRoute = require("./routes/chatRoute");
-const userMessages = require("./routes/messageRoute");
+const messageRoute = require("./routes/messageRoute");
 
-// Set up Express
+// Initialize Express application
 const app = express();
+
+// Middlewares
 app.use(express.json());
-app.use(cors());
 app.use(
   cors({
     origin: ["https://broski-social-chat.onrender.com"],
     credentials: true,
   })
 );
+app.use(express.static("/home/olivierb/comski-social-chat/client/dist"));
+
+// Use Routes
+app.use("/api/users", userRoute);
+app.use("/api/chats", chatRoute);
+app.use("/api/messages", messageRoute);
 
 // Load environment variables
 require("dotenv").config();
-const { Server } = require("socket.io");
 
-// Create http server using the Express app
-const server = http.createServer(app); // Define the server using the Express app
+// MongoDB connection
+// MongoDB connection
+const uri = process.env.ATLAS_URI;
+mongoose
+  .connect(uri)
+  .then(() =>
+    console.log("MongoDB database connection established successfully")
+  )
+  .catch((error) => console.log("MongoDB connection error:", error.message));
 
-const onlineUsers = [];
+// Create HTTP server from Express app
+const server = http.createServer(app);
+
+// Socket.io configuration
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:5173",
-      "http://127.0.0.1:5173",
-      "https://broski-social-chat.onrender.com",
-    ], // Fixed repeated origin keys
+    origin: ["https://broski-social-chat.onrender.com"],
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
+
+// Handle wildcard routes to serve the front-end application
+app.get("*", (req, res) => {
+  res.sendFile(
+    path.join(
+      __dirname,
+      "/home/olivierb/comski-social-chat/client/dist",
+      "index.html"
+    )
+  );
+});
+
+// Online users array
+const onlineUsers = [];
+
+// Socket.io connection events
 io.on("connection", (socket) => {
   console.log("new connection:", socket.id);
+
   socket.on("addNewUser", (userID) => {
     const userExists = onlineUsers.some((user) => user.userID === userID);
     if (!userExists) {
@@ -49,19 +83,16 @@ io.on("connection", (socket) => {
     console.log(onlineUsers);
     io.emit("getOnlineUsers", onlineUsers);
   });
+
   socket.on("sendMessage", ({ chatId, senderId, text, receiverId }) => {
     const receiver = onlineUsers.find((user) => user.userID === receiverId);
     if (receiver) {
-      const message = {
-        chatId,
-        senderId,
-        text,
-        unread: true,
-      };
+      const message = { chatId, senderId, text, unread: true };
       io.to(receiver.socketID).emit("receiveMessage", message);
       io.to(receiver.socketID).emit("unreadMessage", { chatId, unread: true });
     }
   });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
     const userIndex = onlineUsers.findIndex(
@@ -71,14 +102,7 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", onlineUsers);
   });
 });
-// MongoDB connection
-const uri = process.env.ATLAS_URI;
-mongoose
-  .connect(uri)
-  .then(() =>
-    console.log("MongoDB database connection established successfully")
-  )
-  .catch((error) => console.log("MongoDb connection error: ", error.message));
+
 // Start the server
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
