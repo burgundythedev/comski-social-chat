@@ -22,7 +22,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.static("/home/olivierb/comski-social-chat/client/dist"));
+app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 
 // Use Routes
 app.use("/api/users", userRoute);
