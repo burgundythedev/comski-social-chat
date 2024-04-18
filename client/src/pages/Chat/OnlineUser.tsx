@@ -76,6 +76,8 @@ const OnlineUser = () => {
                 key={user._id}
                 className="bg-customYellow p-2 rounded-lg mr-2 my-2 cursor-pointer"
                 onClick={() => handleCreateChat(user._id)}
+      
+
               >
                 {user.name}
                 {onlineUsers.includes(user._id) && (

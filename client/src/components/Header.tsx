@@ -28,19 +28,19 @@ const Header = () => {
         <ul className="lg:flex flex-row">
           {isLoggedIn ? (
             <>
-              <li className="mb-2 lg:mb-0 mr-2">
+              <li className="mb-2 lg:mb-0 mr-2 md:text-xl">
                 Welcome,
-                <span className="ml-1 text-blue-700 font-extrabold">{userInfo.name}</span>
+                <span className="ml-1 text-blue-700 font-extrabold md:text-xl">{userInfo.name}</span>
               </li>
               <div className="flex flex-row">
                 <li
-                  className="p-1 text-sm mr-1 bg-customYellow rounded-lg cursor-pointer w-20 text-center"
+                  className="p-1 text-sm mr-1 bg-customYellow rounded-lg cursor-pointer w-20 text-center md:text-xl"
                   onClick={handleRedirectToChat}
                 >
                   Chats
                 </li>
                 <li
-                  className="p-1 text-sm bg-customYellow rounded-lg cursor-pointer w-20 text-center"
+                  className="p-1 text-sm bg-customYellow rounded-lg cursor-pointer w-20 text-center md:text-xl"
                   onClick={handleLogout}
                 >
                   Logout
@@ -49,10 +49,10 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="register" className="p-5">
+              <Link to="register" className="p-5 md:text-xl">
                 Register
               </Link>
-              <Link to="login" className="p-5">
+              <Link to="login" className="p-5 md:text-xl">
                 Login
               </Link>
             </>
