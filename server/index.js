@@ -56,13 +56,9 @@ const io = new Server(server, {
 
 // Handle wildcard routes to serve the front-end application
 app.get("*", (req, res) => {
-  res.sendFile(
-    path.join(
-      __dirname,
-      "/home/olivierb/comski-social-chat/client/dist",
-      "index.html"
-    )
-  );
+  const filePath = path.join(__dirname, "..", "client", "dist", "index.html");
+  console.log("Attempting to serve:", filePath);
+  res.sendFile(filePath);
 });
 
 // Online users array
