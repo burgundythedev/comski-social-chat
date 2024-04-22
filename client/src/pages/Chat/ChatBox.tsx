@@ -17,7 +17,8 @@ import { formatDate } from "../../models";
 import socket from "../../services/socket";
 import send from "../../assets/send.png";
 import ButtonReturn from "../../Layout/ButtonReturn";
-import useResponsive from "src/hooks/useResponsive";
+import useResponsive from "../../hooks/useResponsive";
+
 
 const ChatBox = () => {
   const currentChat = useSelector((state: RootState) => state.chat.currentChat);
