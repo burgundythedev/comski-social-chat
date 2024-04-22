@@ -17,6 +17,7 @@ import { formatDate } from "../../models";
 import socket from "../../services/socket";
 import send from "../../assets/send.png";
 import ButtonReturn from "../../Layout/ButtonReturn";
+import useResponsive from "src/hooks/useResponsive";
 
 const ChatBox = () => {
   const currentChat = useSelector((state: RootState) => state.chat.currentChat);
@@ -24,6 +25,7 @@ const ChatBox = () => {
   const [messageText, setMessageText] = useState("");
   const [sendChatMessage] = useSendChatMessageMutation();
   const scroll = useRef<HTMLDivElement>(null);
+  const isWide = useResponsive();
 
   const {
     data: messages,
@@ -114,9 +116,7 @@ const ChatBox = () => {
 
   return (
     <div className="font-concert py-5 px-5">
-      <div className="my-5 md:hidden">
-        <ButtonReturn />
-      </div>
+      <div className="my-5">{!isWide && <ButtonReturn />}</div>
       <div className="h-screen flex flex-col justify-between overflow-y-auto">
         <div>
           {messages && messages.length > 0 ? (

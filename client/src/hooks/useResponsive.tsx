@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function useResponsive(widthThreshold = 728) {
+function useResponsive(widthThreshold = 768) {
     const [isWide, setIsWide] = useState(window.innerWidth > widthThreshold);
 
     useEffect(() => {
