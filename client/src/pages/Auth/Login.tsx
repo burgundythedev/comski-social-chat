@@ -39,7 +39,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-start mt-10 justify-center font-kode lg:py-40">
+    <div className="flex items-start mt-10 justify-center font-kode">
       <div className="px-10 text-left rounded-xl">
         <h1 className="text-4xl p-5 font-bold text-center">Login</h1>
         {message && <p className="mb-3 text-sm text-green-500">{message}</p>}

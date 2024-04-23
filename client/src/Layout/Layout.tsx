@@ -6,13 +6,12 @@ interface LayoutProps {
 }
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden lg:p-5">
+    <div className="p-5 flex flex-col h-screen">
       <Header />
-      <main className="grow">{children}</main>
+      <main className="flex  justify-center grow md:flex md:justify-center md:items-center">{children}</main>
       <Footer />
     </div>
   );
 };
-
 
 export default Layout;

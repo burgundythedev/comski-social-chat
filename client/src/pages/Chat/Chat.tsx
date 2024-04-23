@@ -8,25 +8,23 @@ const Chat = () => {
   const isWide = useResponsive(728);
 
   return (
-    <div className="w-full mt-10 p-5 flex flex-col justify-center md:mt-0">
-
-    <div className="mt-10 md:mt-5">
-      <div className="md:flex md:flex-row">
-        <div className="md:w-1/4">
-        {isLoggedIn && (
-      <div className="md:mr-4">
-        <OnlineUser />
-      </div>
-    )}
-          <ChatLists />
-        </div>
-        <div className="md:w-3/4">
-          {isWide && <ChatBox />}
+    <div className="px-5 flex flex-col md:w-full">
+      <div className="mt-10 md:mt-5">
+        <div className="md:flex md:flex-row">
+          <div className="md:w-1/4">
+            {isLoggedIn && (
+              <div className="md:mr-4">
+                <OnlineUser />
+              </div>
+            )}
+            <div>
+              <ChatLists />
+            </div>
+          </div>
+          <div className="md:w-3/4 md:flex md:items-start">{isWide && <ChatBox />}</div>
         </div>
       </div>
     </div>
-  </div>
-  
   );
 };
 

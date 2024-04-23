@@ -68,13 +68,13 @@ const OnlineUser = () => {
       <div>
         <h2 className="text-xl font-semibold">Online Users</h2>
       </div>
-      <div>
+      <div className="md:max-h-36 overflow-auto">
         {displayUsers.length > 0 ? (
           <ul className="flex flex-wrap flex-row mt-5">
             {displayUsers.map((user) => (
               <li
                 key={user._id}
-                className="bg-customYellow p-2 rounded-lg mr-2 my-2 cursor-pointer"
+                className="bg-customYellow p-2 rounded-lg mr-2 my-2 text-sm cursor-pointer"
                 onClick={() => handleCreateChat(user._id)}
       
 

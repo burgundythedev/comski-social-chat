@@ -3,7 +3,7 @@ import home from "../assets/home-pic.png";
 
 const Home = () => {
   return (
-    <div className="w-full font-kode p-2 mb-10 lg:mb-0 lg:py-40">
+    <div className="w-full font-kode p-2 mb-10 lg:mb-0">
       <div className="flex flex-col lg:flex-row-reverse justify-evenly items-center">
         <div>
           <img src={home} alt="Broski" className="lg:w-96"/>

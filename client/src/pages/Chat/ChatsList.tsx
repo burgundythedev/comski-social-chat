@@ -136,18 +136,16 @@ const ChatList = () => {
     return <div className="font-kode p-2">Error fetching chats</div>;
 
   return (
-    <div className="font-kode flex flex-col grow">
+    <div className="font-kode flex flex-col grow mt-10">
       <h2 className="text-xl font-semibold mb-5">Chats</h2>
-      <ul className="flex-1 border-t border-black rounded-xl overflow-y-auto md:overflow-y-visible">
+      <ul className="border-t border-customYellow md:p-5 md:max-h-maxHeight overflow-y-auto">
         {chatData?.chats.length === 0 ? (
-          <p className="text-center text-xl py-5 mt-20">
-            Create a chat and enjoy
-          </p>
+          <p className="text-center text-sm mt-10">Create a chat and enjoy</p>
         ) : (
           chatData?.chats.map((chat) => (
             <div
               key={chat._id}
-              className={`flex flex-col p-4 rounded-xl mb-5 cursor-pointer border-t-4 border-customYellow w-full ${
+              className={`flex flex-col p-4 rounded-xl mb-5 cursor-pointer border-t border-black w-full ${
                 unreadChats.includes(chat._id)
                   ? "bg-blue-100 animate-pulse"
                   : currentChat && chat._id === currentChat._id

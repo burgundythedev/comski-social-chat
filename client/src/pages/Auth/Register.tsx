@@ -51,7 +51,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center font-kode lg:py-40">
+    <div className="flex items-center justify-center font-kode">
       <div className="px-5  text-left  rounded-xl">
         <h1 className="text-4xl p-4 font-bold text-center">Register</h1>
         {message && <p className="mb-3 text-sm text-red-500">{message}</p>}

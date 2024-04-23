@@ -8,7 +8,7 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
-  const isWide = useResponsive(); // This will use the default threshold of 768px
+  const isWide = useResponsive();
 
   const isLoggedIn = userInfo.token && userInfo.type === "login";
 
@@ -37,7 +37,7 @@ const Header = () => {
                 </span>
               </li>
               <div className="flex flex-row">
-                {!isWide && (
+                {!isWide && isLoggedIn && (
                   <li
                     className="p-1 text-sm mr-1 bg-customYellow rounded-lg cursor-pointer w-20 text-center md:text-xl"
                     onClick={handleRedirectToChat}
@@ -45,6 +45,7 @@ const Header = () => {
                     Chats
                   </li>
                 )}
+
                 <li
                   className="p-1 text-sm bg-customYellow rounded-lg cursor-pointer w-20 text-center md:text-xl"
                   onClick={handleLogout}

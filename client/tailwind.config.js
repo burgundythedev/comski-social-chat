@@ -35,6 +35,12 @@ export const theme = {
     picSize: {
       15: "500px",
     },
+    maxHeight: {
+      maxHeight: "55vh",
+    },
+    height: {
+      120: "36rem",
+    },
   },
 };
 export const plugins = [];
