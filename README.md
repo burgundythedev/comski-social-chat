@@ -1,5 +1,7 @@
 # Broski Social Chat
 
+https://broski-social-chat.onrender.com/chat
+
 Broski Social Chat is a real-time social messaging app where you can register, login, and chat with friends. This app is built using Vite, React, and TypeScript, styled with Tailwind CSS, and utilizes Express, Node.js, and Socket.IO for backend services.
 
 ## Features
